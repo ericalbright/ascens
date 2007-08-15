@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include "trie_set"
+#include <Windows.h>
 
 extern "C" {
 #include "CVTUTF.H"
