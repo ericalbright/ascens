@@ -1,0 +1,44 @@
+// Microsoft Visual C++ generated resource script.
+
+#include <windows.h>
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "CompanyName", "SIL International"
+            VALUE "FileDescription", "Another Spell Checking Engine"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "Ascens"
+            VALUE "LegalCopyright", "Copyright © 2007 SIL International; Portions derived from source code that is Copyright © 1994 Hewlett-Packard Company and Copyright © 1996,1997 Silicon Graphics Computer Systems, Inc."
+            VALUE "OriginalFilename", "ascens.dll"
+            VALUE "ProductName", "Another Spell Checking Engine"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
+
+
+
