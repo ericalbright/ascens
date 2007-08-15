@@ -227,3 +227,27 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_SuggestionsCannotFitI
     CHECK(std::find(sSuggestions.begin(), sSuggestions.end(), *itWord) != sSuggestions.end());
   }
 }
+
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NoSuggestionsWithinEditDistance_NoSuggestions){
+  std::vector<const std::wstring> sWords;
+  sWords.push_back(std::wstring(L"cat"));
+  sWords.push_back(std::wstring(L"hat"));
+  sWords.push_back(std::wstring(L"that"));
+  sWords.push_back(std::wstring(L"tot"));
+
+  AddWordsToDictionary(sWords);
+
+  std::wstring s(L"bad");
+  const size_t cchBuffer = 4096;
+  wchar_t szBuffer[cchBuffer];
+  CHECK(GetSuggestionsFromWord(hDictionary, s.c_str(), s.size(), szBuffer, cchBuffer, 1, 0));
+
+  std::vector<const std::wstring> sSuggestions;
+  for(size_t i=0; szBuffer[i] != L'\0'; ++i){
+    std::wstring sSuggestion(&szBuffer[i]);
+    sSuggestions.push_back(sSuggestion);
+    i+= sSuggestion.size();
+  }
+  
+  CHECK_EQUAL(0, sSuggestions.size());
+}

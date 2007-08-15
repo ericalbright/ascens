@@ -33,7 +33,8 @@ extern "C" {
   DllExport BOOL  ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, 
                                          LPCWSTR szWord, size_t cchWord, 
                                          LPWSTR szBuffer, size_t cbBuffer, 
-                                         USHORT nEditDistanceMax = 1);
+                                         USHORT nEditDistanceMax = 1,
+                                         USHORT nBestDistanceMax = 6);
   DllExport BOOL  ASCENSAPI AddWordToDictionary(DHANDLE hDictionary, LPCWSTR szWord, size_t cchWord);
   DllExport BOOL  ASCENSAPI RemoveWordFromDictionary(DHANDLE hDictionary, LPCWSTR szWord, size_t cchWord);
 

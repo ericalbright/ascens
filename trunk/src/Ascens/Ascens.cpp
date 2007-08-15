@@ -90,7 +90,7 @@ DllExport BOOL ASCENSAPI IsWordInDictionary(DHANDLE hDictionary, LPCWSTR strWord
 ////////////////
 // GetSuggestionsFromWord
 DllExport BOOL ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, LPCWSTR strWord, size_t cchWord, 
-        LPWSTR szBuffer, size_t cchBuffer, USHORT nMax) 
+        LPWSTR szBuffer, size_t cchBuffer, USHORT nErrorTolerance, USHORT nBestErrorTolerance) 
 {
   if (strWord == NULL || cchWord == 0) { return false; }
   if (szBuffer == NULL || cchBuffer < 2) { return false; }
@@ -100,7 +100,7 @@ DllExport BOOL ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, LPCWSTR str
 
   std::wstring sWord(strWord, cchWord);
   try{
-    _STD vector<_STD wstring> rgstrSuggestions = pDictionary->GetSuggestionsFromWord(sWord, nMax, 6);
+    _STD vector<_STD wstring> rgstrSuggestions = pDictionary->GetSuggestionsFromWord(sWord, nErrorTolerance, nBestErrorTolerance);
 
     size_t pos = 0;
     for(_STD vector<_STD wstring>::iterator itrgstrSuggestions=rgstrSuggestions.begin(); 
