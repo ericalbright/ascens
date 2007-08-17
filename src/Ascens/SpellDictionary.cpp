@@ -93,20 +93,22 @@ void SpellDictionary::Load()  {
 
   try {
 
-    BY_HANDLE_FILE_INFORMATION FileInformation;
-    if(GetFileInformationByHandle(hFile, &FileInformation) == 0) {
+    FILETIME ftLastWriteTime;
+    if(!GetFileTime(hFile, NULL, NULL, &ftLastWriteTime)) {
       throw HRESULT_FROM_WIN32(GetLastError());
     }
     
     //has file been modified?
     // returns 0 when first time is equal to second time;
-    if(CompareFileTime(&ftLastKnownWrite_, &FileInformation.ftLastWriteTime) == 0) {
+    if(!CompareFileTime(&ftLastKnownWrite_, &ftLastWriteTime)) {
       //if has not been changed since loaded, no need to load again
       CloseHandle(hFile);
       return;
     }
 
-    ftLastKnownWrite_ = FileInformation.ftLastWriteTime;
+    // on FAT volumes, write time has a resolution of 2 seconds so it is possible that
+    // changes could sneak in.
+    ftLastKnownWrite_ = ftLastWriteTime;
 //      fReadonly_ = FileInformation.dwFileAttributes & FILE_ATTRIBUTE_READONLY;
     
     // peak at the first two bytes to see which encoding we are using.
@@ -172,9 +174,7 @@ void SpellDictionary::Save() {
   }
 
   // update the last known write time
-  FILETIME ftLastWriteTime;
-  GetLastWriteTime(&ftLastWriteTime);
-  ftLastKnownWrite_ = ftLastWriteTime;
+  ftLastKnownWrite_ = GetLastWriteTime();
 }
 
 void SpellDictionary::SaveAsUTF16(HANDLE hFile) const {
@@ -234,9 +234,8 @@ void SpellDictionary::SaveAsUTF8(HANDLE hFile) const {
   }
 }
 
-void SpellDictionary::GetLastWriteTime(FILETIME * ftLastWriteTime) const {
-  if (ftLastWriteTime == NULL) throw E_POINTER; // Don't crash!
-
+FILETIME SpellDictionary::GetLastWriteTime() const {
+  FILETIME ftLastWriteTime;
   HANDLE hFile = CreateFileW(strDictionaryFilePath_.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if(hFile == INVALID_HANDLE_VALUE) {
@@ -244,7 +243,7 @@ void SpellDictionary::GetLastWriteTime(FILETIME * ftLastWriteTime) const {
   }
 
   // Retrieve the file times for the file.
-  if (!GetFileTime(hFile, NULL, NULL, ftLastWriteTime)){
+  if (!GetFileTime(hFile, NULL, NULL, &ftLastWriteTime)){
     HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
     CloseHandle(hFile);
     throw hr;
@@ -252,6 +251,8 @@ void SpellDictionary::GetLastWriteTime(FILETIME * ftLastWriteTime) const {
   if(!CloseHandle(hFile)) {
     throw HRESULT_FROM_WIN32(GetLastError());
   }
+
+  return ftLastWriteTime;
 }
 
 

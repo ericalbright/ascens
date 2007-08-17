@@ -67,7 +67,7 @@ private:
   void SaveAsUTF8(HANDLE hFile) const;
   void SaveAsUTF16(HANDLE hFile) const;
   
-  void GetLastWriteTime(FILETIME * ftLastWriteTime) const;
+  FILETIME GetLastWriteTime() const;
   void LoadUTF8File(HANDLE hFile);
 
   enum ByteOrder{
