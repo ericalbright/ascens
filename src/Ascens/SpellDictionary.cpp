@@ -5,6 +5,8 @@ SpellDictionary::SpellDictionary(void)
 }
 
 void SpellDictionary::Load (const std::wstring& strDictionaryFilePath){
+  ftLastKnownWrite_.dwHighDateTime = 0;
+  ftLastKnownWrite_.dwLowDateTime = 0; // will force a load. 
   strDictionaryFilePath_ = strDictionaryFilePath;
   Load();
 }
