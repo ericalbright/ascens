@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 struct DictionaryTestFixture{
   //Setup
@@ -27,6 +28,20 @@ struct DictionaryTestFixture{
       ++itWord){
       AddWordToDictionary(hDictionary, itWord->c_str(), itWord->size());
     }
+  }
+
+  void ExternalAddWordsToDictionary(const std::vector<const std::wstring>& sWords){
+    Sleep(15); // for FAT systems have a 2 second resolution
+               // NTFS is appreciably faster but no specs on what it is exactly
+               // this seems to work
+    std::wofstream ofs;
+    ofs.open(szDictionaryFileName, std::ios_base::app | std::ios_base::out);
+    for(std::vector<const std::wstring>::const_iterator itWord = sWords.begin();
+      itWord != sWords.end();
+      ++itWord){
+      ofs << std::endl << *itWord;
+    }
+    ofs.close();
   }
 
   DHANDLE hDictionary;
@@ -250,4 +265,32 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NoSuggestionsWithinEd
   }
   
   CHECK_EQUAL(0, sSuggestions.size());
+}
+
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryChangedExternally_Successful){
+  std::vector<const std::wstring> sWords;
+  sWords.push_back(std::wstring(L"cat"));
+  sWords.push_back(std::wstring(L"hat"));
+  sWords.push_back(std::wstring(L"that"));
+  sWords.push_back(std::wstring(L"bat"));
+  sWords.push_back(std::wstring(L"tot"));
+
+  ExternalAddWordsToDictionary(sWords);
+
+  for(std::vector<const std::wstring>::const_iterator itWord = sWords.begin(); itWord != sWords.end(); ++itWord){
+    BOOL result = IsWordInDictionary(hDictionary, itWord->c_str(), itWord->size());
+    CHECK(result);
+  }
+
+  std::vector<const std::wstring> sNewWords;
+  sNewWords.push_back(std::wstring(L"potatoe"));
+  sNewWords.push_back(std::wstring(L"grow"));
+  sNewWords.push_back(std::wstring(L"another"));
+
+  ExternalAddWordsToDictionary(sNewWords);
+
+  for(std::vector<const std::wstring>::const_iterator itWord = sNewWords.begin(); itWord != sNewWords.end(); ++itWord){
+    CHECK(IsWordInDictionary(hDictionary, itWord->c_str(), itWord->size()));
+  }
+
 }
