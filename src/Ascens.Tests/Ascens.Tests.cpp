@@ -30,7 +30,17 @@ struct DictionaryTestFixture{
     }
   }
 
-  void ExternalAddWordsToDictionary(const std::vector<const std::wstring>& sWords){
+  void ExternalCreateDictionaryWithBOM(){
+    Sleep(15); // for FAT systems have a 2 second resolution
+               // NTFS is appreciably faster but no specs on what it is exactly
+               // this seems to work
+    std::wofstream ofs;
+    ofs.open(szDictionaryFileName, std::ios_base::trunc | std::ios_base::out);
+    ofs << (char)0xef << (char)0xbb << (char) 0xbf; // utf-8 BOM!
+    ofs.close();
+  }
+
+  void ExternalAddWordsToDictionary(const std::vector<const std::wstring>& sWords, bool fIsStartOfFile = false){
     Sleep(15); // for FAT systems have a 2 second resolution
                // NTFS is appreciably faster but no specs on what it is exactly
                // this seems to work
@@ -39,7 +49,13 @@ struct DictionaryTestFixture{
     for(std::vector<const std::wstring>::const_iterator itWord = sWords.begin();
       itWord != sWords.end();
       ++itWord){
-      ofs << std::endl << *itWord;
+      if(!fIsStartOfFile){
+        ofs << std::endl;
+      }
+      else {
+        fIsStartOfFile = false;
+      }
+      ofs << *itWord;
     }
     ofs.close();
   }
@@ -294,3 +310,24 @@ TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryChangedExternal
   }
 
 }
+
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryBeginsWithBOM_Successful){
+  ExternalCreateDictionaryWithBOM();
+
+  std::vector<const std::wstring> sWords;
+  sWords.push_back(std::wstring(L"cat"));
+  sWords.push_back(std::wstring(L"hat"));
+  sWords.push_back(std::wstring(L"that"));
+  sWords.push_back(std::wstring(L"bat"));
+  sWords.push_back(std::wstring(L"tot"));
+
+  ExternalAddWordsToDictionary(sWords, true);
+
+  for(std::vector<const std::wstring>::const_iterator itWord = sWords.begin(); itWord != sWords.end(); ++itWord){
+    BOOL result = IsWordInDictionary(hDictionary, itWord->c_str(), itWord->size());
+    CHECK(result);
+  }
+}
+
+
+  

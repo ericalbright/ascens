@@ -268,6 +268,7 @@ void SpellDictionary::LoadUTF8File(HANDLE hFile) {
   unsigned char c;
   std::wstring str;
   std::wstring strData;
+  const unsigned long BOM = 0xfeff;
 
   unsigned char RemainingBytes[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -311,7 +312,9 @@ void SpellDictionary::LoadUTF8File(HANDLE hFile) {
         }
       } 
       else {
-        str += (wchar_t)UCS4ch;
+       if(UCS4ch != BOM){
+         str += (wchar_t)UCS4ch;
+       }
       }
 
     } 
