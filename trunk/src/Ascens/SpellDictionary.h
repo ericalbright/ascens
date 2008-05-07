@@ -25,61 +25,73 @@
 #include <string>
 #include <vector>
 #include "trie_set"
-#include <Windows.h>
+#include <glib.h>
 
-extern "C" {
-#include "CVTUTF.H"
-}
+class IDictionaryFile; // don't include IDictionaryFile.h since IDictionaryFile.h includes SpellDictionary.h for wordlist_type
 
 #pragma warning(disable: 4786) //identifier was truncated to '255' characters in the browser information
 
 class SpellDictionary
 {
-  typedef trie::trie_set<std::wstring>     wordlist_type;
-  typedef wordlist_type::iterator          wordlist_iterator;
+public:
+  typedef trie::trie_set<std::basic_string<gunichar>>     wordlist_type;
+  typedef wordlist_type::iterator                         wordlist_iterator;
 
 public:
   SpellDictionary();
+  ~SpellDictionary();
 
 //     Load                     -- associates the dictionary file --
-void Load (const std::wstring& strDictionaryFilePath);
+// the dictionaryFile's lifetime is then managed by this class
+void Load (IDictionaryFile * const pDictionaryFile);
 
 //     IsWordPresent            -- determines if the word exists in the dictionary --
-bool IsWordPresent(const std::wstring& strWord);
+bool IsWordPresent(const std::basic_string<gunichar>& strWord);
+bool IsWordPresentUtf8(const std::string& strWord);
+bool IsWordPresentUtf16(const std::basic_string<gunichar2>& strWord);
   
 //     GetSuggestionsFromWord   -- gives a list of words which a similar by N distinctions --
-std::vector<std::wstring> GetSuggestionsFromWord(const std::wstring& strWord, USHORT nErrorTolerance = 2, USHORT nBestErrorTolerance = 6);
+std::vector<std::basic_string<gunichar> > GetSuggestionsFromWord(const std::basic_string<gunichar>& strWord);
+std::vector<std::string> GetSuggestionsFromWordUtf8(const std::string& strWord);
+std::vector<std::basic_string<gunichar2> > GetSuggestionsFromWordUtf16(const std::basic_string<gunichar2>& strWord);
 
 //     AddWord                  -- adds the word to the dictionary if it does not exist --
-  void AddWord(const std::wstring& strWord);
+  void AddWord(const std::basic_string<gunichar>& strWord);
+  void AddWordUtf8(const std::string& strWord);
+  void AddWordUtf16(const std::basic_string<gunichar2>& strWord);
 
 //     RemoveWord               -- removes the word from the dictionary if it exists --
-  void RemoveWord(const std::wstring& strWord);
+  void RemoveWord(const std::basic_string<gunichar>& strWord);
+  void RemoveWordUtf8(const std::string& strWord);
+  void RemoveWordUtf16(const std::basic_string<gunichar2>& strWord);
   
   void RemoveAllWords();
 
   size_t GetEntryCount();
 
+  USHORT GetSuggestionErrorTolerance() const
+  {
+      return nErrorTolerance_;
+  }
+  void SetSuggestionErrorTolerance(USHORT value){
+      nErrorTolerance_ = value;
+  }
+
+  USHORT GetSuggestionBestErrorTolerance() const
+  {
+      return nBestErrorTolerance_;
+  }
+  void SetSuggestionBestErrorTolerance(USHORT value){
+      nBestErrorTolerance_ = value;
+  }
+
 private:
-  void Load();
-  void Save();
-  
-  void SaveAsUTF8(HANDLE hFile) const;
-  void SaveAsUTF16(HANDLE hFile) const;
-  
-  FILETIME GetLastWriteTime() const;
-  void LoadUTF8File(HANDLE hFile);
+    void ReleaseDictionaryFile();
+    void Load();
+    void Save();
 
-  enum ByteOrder{
-    LittleEndian,
-    BigEndian
-  };
-
-  void LoadUTF16File(HANDLE hFile, ByteOrder fIsByteReversed);
-
-private:
   wordlist_type rgWordList_;
-  std::wstring  strDictionaryFilePath_;
-  bool          fIsUtf8_;
-  FILETIME      ftLastKnownWrite_;
+  IDictionaryFile* pDictionaryFile_;
+  USHORT nErrorTolerance_;
+  USHORT nBestErrorTolerance_;
 };

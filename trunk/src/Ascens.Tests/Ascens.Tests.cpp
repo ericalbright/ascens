@@ -41,7 +41,7 @@ struct DictionaryTestFixture{
   }
 
   void ExternalAddWordsToDictionary(const std::vector<const std::wstring>& sWords, bool fIsStartOfFile = false){
-    Sleep(15); // for FAT systems have a 2 second resolution
+    Sleep(2000); // for FAT systems have a 2 second resolution
                // NTFS is appreciably faster but no specs on what it is exactly
                // this seems to work
     std::wofstream ofs;
