@@ -44,10 +44,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".\"
-				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/scent.pch"
@@ -73,7 +73,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="C:\Documents and Settings\Eric\My Documents\my projects\stl\current\Release"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="1"
 				TargetMachine="1"
@@ -133,10 +133,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\"
-				PreprocessorDefinitions="_CONSOLE;_DEBUG;WIN32"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;"
+				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Debug/scent.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -161,9 +161,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="glib-2.0-vs8.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="C:\Documents and Settings\Eric\My Documents\my projects\stl\current\Release"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/scent.pdb"
 				SubSystem="1"
@@ -192,6 +193,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)\*.dll&quot; &quot;$(OutDir)\&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -207,7 +209,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CVTUTF.C"
+				RelativePath=".\LiftDictionaryFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LineDictionaryFile.cpp"
 				>
 			</File>
 			<File
@@ -224,7 +230,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CVTUTF.H"
+				RelativePath=".\Convert.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DictionaryFileBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IDictionaryFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LiftDictionaryFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LineDictionaryFile.h"
 				>
 			</File>
 			<File

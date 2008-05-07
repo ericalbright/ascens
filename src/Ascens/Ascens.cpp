@@ -34,6 +34,7 @@
 #include "SpellDictionary.h"
 #define ASCENSDLL
 #include "Ascens.h"
+#include "LineDictionaryFile.h"
 
 /////////////////
 // LoadDictionary
@@ -45,7 +46,8 @@ DllExport DHANDLE ASCENSAPI LoadDictionary(LPCWSTR szDictionaryFileSpec)
   }
   SpellDictionary * pDictionary = new SpellDictionary();
   try{
-    pDictionary->Load(szDictionaryFileSpec);
+    pDictionary->Load(new LineDictionaryFile(
+        reinterpret_cast<const gunichar2*>(szDictionaryFileSpec)));
   }
   catch(...)
   {
@@ -78,9 +80,9 @@ DllExport BOOL ASCENSAPI IsWordInDictionary(DHANDLE hDictionary, LPCWSTR strWord
     return false; 
   }
   
-  std::wstring sWord(strWord, cchWord);
+  std::basic_string<gunichar2> sWord(reinterpret_cast<const gunichar2*>(strWord), cchWord);
   try{
-    return pDictionary->IsWordPresent(sWord);
+    return pDictionary->IsWordPresentUtf16(sWord);
   }
   catch(...){
   }
@@ -98,12 +100,16 @@ DllExport BOOL ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, LPCWSTR str
   
   SpellDictionary* pDictionary = (SpellDictionary*) hDictionary;
 
-  std::wstring sWord(strWord, cchWord);
+  std::basic_string<gunichar2> sWord(reinterpret_cast<const gunichar2*>(strWord), cchWord);
+  pDictionary->SetSuggestionErrorTolerance(nErrorTolerance);
+  pDictionary->SetSuggestionBestErrorTolerance(nBestErrorTolerance);
   try{
-    _STD vector<_STD wstring> rgstrSuggestions = pDictionary->GetSuggestionsFromWord(sWord, nErrorTolerance, nBestErrorTolerance);
+      std::vector<std::basic_string<gunichar2> > rgstrSuggestions = 
+        pDictionary->GetSuggestionsFromWordUtf16(sWord);
 
     size_t pos = 0;
-    for(_STD vector<_STD wstring>::iterator itrgstrSuggestions=rgstrSuggestions.begin(); 
+    for(std::vector<std::basic_string<gunichar2> >::iterator 
+                            itrgstrSuggestions=rgstrSuggestions.begin(); 
         itrgstrSuggestions!=rgstrSuggestions.end(); 
         ++itrgstrSuggestions) { 
       if(cchBuffer - pos - 1 < itrgstrSuggestions->size()+1){
@@ -111,7 +117,7 @@ DllExport BOOL ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, LPCWSTR str
       }
 
 #pragma warning(suppress:4996)
-      wcsncpy(&szBuffer[pos], itrgstrSuggestions->c_str(), itrgstrSuggestions->size());
+      wcsncpy(&szBuffer[pos], reinterpret_cast<LPCWSTR>(itrgstrSuggestions->c_str()), itrgstrSuggestions->size());
       pos += itrgstrSuggestions->size();
       szBuffer[pos] = L'\0';
       ++pos;
@@ -139,10 +145,11 @@ DllExport BOOL ASCENSAPI AddWordToDictionary(DHANDLE hDictionary, LPCWSTR strWor
   
   SpellDictionary* pDictionary = (SpellDictionary*) hDictionary;
 
-  std::wstring sWord(strWord, cchWord);
+  std::basic_string<gunichar2> sWord(reinterpret_cast<const gunichar2*>(strWord), 
+                                     cchWord);
 
   try {
-    pDictionary->AddWord(sWord);
+    pDictionary->AddWordUtf16(sWord);
     return true;
   }
   catch (...){
@@ -158,9 +165,10 @@ DllExport BOOL ASCENSAPI RemoveWordFromDictionary(DHANDLE hDictionary, LPCWSTR s
   if (hDictionary == NULL) { return false; }
   
   SpellDictionary* pDictionary = (SpellDictionary*) hDictionary;
-  std::wstring sWord(strWord, cchWord);
+  std::basic_string<gunichar2> sWord(reinterpret_cast<const gunichar2*>(strWord), 
+                                     cchWord);
   try{
-    pDictionary->RemoveWord(sWord);
+    pDictionary->RemoveWordUtf16(sWord);
     return true;
   }
   catch(...){
