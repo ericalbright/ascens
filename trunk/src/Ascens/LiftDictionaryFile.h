@@ -11,10 +11,29 @@
  */
 
 #include "DictionaryFileBase.h"
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
 
 class LiftDictionaryFile : DictionaryFileBase
 {
-    LiftDictionaryFile(const std::string & sDictionaryFilePath):DictionaryFileBase(sDictionaryFilePath)
+    std::string sXPathThatSelectsWords_;
+
+    xmlDocPtr doc_;
+    xmlXPathContextPtr xpathCtx_; 
+    xmlXPathObjectPtr xpathObj_; 
+    int index_;
+
+public:
+    LiftDictionaryFile(const std::string& sDictionaryFilePath,
+                       const std::string& sXPathThatSelectsWords)
+        :DictionaryFileBase(sDictionaryFilePath),
+        sXPathThatSelectsWords_(sXPathThatSelectsWords),
+        doc_(NULL),
+        xpathCtx_(NULL), 
+        xpathObj_(NULL),
+        index_(0)
     {
     }
 
@@ -37,8 +56,8 @@ class LiftDictionaryFile : DictionaryFileBase
         return false;
     }
 
-    virtual bool GetWordsFromFileSetup() const;
+    virtual bool GetWordsFromFileSetup();
     virtual bool FileHasAnotherWord() const;
     virtual std::basic_string<gunichar> GetNextWordFromFile() const;
-    virtual bool GetWordsFromFileTeardown() const;
+    virtual bool GetWordsFromFileTeardown();
 };

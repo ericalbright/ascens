@@ -44,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -71,9 +71,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="1"
 				TargetMachine="1"
@@ -133,7 +134,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
 				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -161,10 +162,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glib-2.0-vs8.lib"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/scent.pdb"
 				SubSystem="1"

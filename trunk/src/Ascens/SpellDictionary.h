@@ -69,19 +69,19 @@ std::vector<std::basic_string<gunichar2> > GetSuggestionsFromWordUtf16(const std
 
   size_t GetEntryCount();
 
-  USHORT GetSuggestionErrorTolerance() const
+  unsigned short GetSuggestionErrorTolerance() const
   {
       return nErrorTolerance_;
   }
-  void SetSuggestionErrorTolerance(USHORT value){
+  void SetSuggestionErrorTolerance(unsigned short value){
       nErrorTolerance_ = value;
   }
 
-  USHORT GetSuggestionBestErrorTolerance() const
+  unsigned short GetSuggestionBestErrorTolerance() const
   {
       return nBestErrorTolerance_;
   }
-  void SetSuggestionBestErrorTolerance(USHORT value){
+  void SetSuggestionBestErrorTolerance(unsigned short value){
       nBestErrorTolerance_ = value;
   }
 
@@ -92,6 +92,6 @@ private:
 
   wordlist_type rgWordList_;
   IDictionaryFile* pDictionaryFile_;
-  USHORT nErrorTolerance_;
-  USHORT nBestErrorTolerance_;
+  unsigned short nErrorTolerance_;
+  unsigned short nBestErrorTolerance_;
 };
