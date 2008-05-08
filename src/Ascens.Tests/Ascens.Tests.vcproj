@@ -40,13 +40,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\lib\UnitTest++\src&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\lib\UnitTest++\src&quot;;&quot;$(SolutionDir)Ascens&quot;;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;LIBXML_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,11 +120,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\..\lib\UnitTest++\src&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\lib\UnitTest++\src&quot;;&quot;$(SolutionDir)Ascens&quot;;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;LIBXML_STATIC"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -137,7 +139,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -186,6 +190,10 @@
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\XmlDictionaryFileTests.cpp"
 				>
 			</File>
 		</Filter>

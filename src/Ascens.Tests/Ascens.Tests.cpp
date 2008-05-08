@@ -36,7 +36,7 @@ struct DictionaryTestFixture{
                // this seems to work
     std::wofstream ofs;
     ofs.open(szDictionaryFileName, std::ios_base::trunc | std::ios_base::out);
-    ofs << (char)0xef << (char)0xbb << (char) 0xbf; // utf-8 BOM!
+    ofs << '\xef' << '\xbb' << '\xbf'; // utf-8 BOM!
     ofs.close();
   }
 
@@ -66,23 +66,28 @@ struct DictionaryTestFixture{
 
 
 //// LoadDictionary
-TEST(LoadDictionary_NullFileName_NullDictionaryHandle){
+TEST(LoadDictionary_NullFileName_NullDictionaryHandle)
+{
   DHANDLE hDictionary = LoadDictionary(NULL);
   CHECK_EQUAL((DHANDLE)NULL, hDictionary); 
 }
 
 //// UnloadDictionary
-TEST(UnloadDictionary_NullHandle_NoCrash){
+TEST(UnloadDictionary_NullHandle_NoCrash)
+{
+    testResults_;
   UnloadDictionary(NULL);
 }
 
 //// IsWordInDictionary
-TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_NotExists_False){
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_NotExists_False)
+{
   std::wstring s(L"I'mnotinadictionary");
   CHECK(!IsWordInDictionary(hDictionary, s.c_str(), s.size()));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_Exists_True){
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_Exists_True)
+{
   std::wstring s(L"dictionary");
   AddWordToDictionary(hDictionary, s.c_str(), s.size());
   CHECK(IsWordInDictionary(hDictionary, s.c_str(), s.size()));
@@ -90,7 +95,8 @@ TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_Exists_True){
 }
 
 //// AddWordToDictionary
-TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_AlreadyExists_Successful){
+TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_AlreadyExists_Successful)
+{
   std::wstring s(L"dictionary");
   AddWordToDictionary(hDictionary, s.c_str(), s.size());
   CHECK(IsWordInDictionary(hDictionary, s.c_str(), s.size()));
@@ -98,54 +104,64 @@ TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_AlreadyExists_Successful
   CHECK(IsWordInDictionary(hDictionary, s.c_str(), s.size()));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_NotAlreadyExists_Successful){
+TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_NotAlreadyExists_Successful)
+{
   std::wstring s(L"dictionary");
   CHECK(!IsWordInDictionary(hDictionary, s.c_str(), s.size()));
   CHECK(AddWordToDictionary(hDictionary, s.c_str(), s.size()));
   CHECK(IsWordInDictionary(hDictionary, s.c_str(), s.size()));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_NullWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_NullWord_NotSuccessful)
+{
   CHECK(!AddWordToDictionary(hDictionary, NULL, 1));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_0SizeWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_0SizeWord_NotSuccessful)
+{
   CHECK(!AddWordToDictionary(hDictionary, L"word", 0));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_Empty_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, AddWordToDictionary_Empty_NotSuccessful)
+{
   CHECK(!AddWordToDictionary(hDictionary, L"", 0));
 }
 
 //// RemoveWordFromDictionary
-TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_Exists_Successful){
+TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_Exists_Successful)
+{
   std::wstring s(L"dictionary");
   AddWordToDictionary(hDictionary, s.c_str(), s.size());
   CHECK(RemoveWordFromDictionary(hDictionary, s.c_str(), s.size()));
   CHECK(!IsWordInDictionary(hDictionary, s.c_str(), s.size()));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_NotExists_Successful){
+TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_NotExists_Successful)
+{
   std::wstring s(L"dictionary");
   CHECK(!IsWordInDictionary(hDictionary, s.c_str(), s.size()));
   CHECK(RemoveWordFromDictionary(hDictionary, s.c_str(), s.size()));
   CHECK(!IsWordInDictionary(hDictionary, s.c_str(), s.size()));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_NullWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_NullWord_NotSuccessful)
+{
   CHECK(!RemoveWordFromDictionary(hDictionary, NULL, 1));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_0SizeWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_0SizeWord_NotSuccessful)
+{
   CHECK(!RemoveWordFromDictionary(hDictionary, L"word", 0));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_Empty_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, RemoveWordFromDictionary_Empty_NotSuccessful)
+{
   CHECK(!RemoveWordFromDictionary(hDictionary, L"", 0));
 }
 
 //// GetSuggestionsFromWord
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_WordInDictionary_Successful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_WordInDictionary_Successful)
+{
   std::wstring s(L"dictionary");
   AddWordToDictionary(hDictionary, s.c_str(), s.size());
 
@@ -160,11 +176,13 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_WordInDictionary_Succ
     i+= sSuggestion.size();
   }
 
-  CHECK_EQUAL(1, sSuggestions.size());
+  CHECK_EQUAL(static_cast<std::vector<std::wstring>::size_type>(1),
+              sSuggestions.size());
   CHECK(s == sSuggestions[0]);
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_MultipleSuggestions_Successful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_MultipleSuggestions_Successful)
+{
   std::vector<const std::wstring> sNoiseWords;
   sNoiseWords.push_back(std::wstring(L"spat"));
   sNoiseWords.push_back(std::wstring(L"tots"));
@@ -201,34 +219,40 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_MultipleSuggestions_S
   }
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NullWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NullWord_NotSuccessful)
+{
   const size_t cchBuffer = 4096;
   wchar_t szBuffer[cchBuffer];
   CHECK(!GetSuggestionsFromWord(hDictionary, NULL, 4, szBuffer, cchBuffer));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_EmptyWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_EmptyWord_NotSuccessful)
+{
   const size_t cchBuffer = 4096;
   wchar_t szBuffer[cchBuffer];
   CHECK(!GetSuggestionsFromWord(hDictionary, L"", 0, szBuffer, cchBuffer));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_0SizeWord_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_0SizeWord_NotSuccessful)
+{
   const size_t cchBuffer = 4096;
   wchar_t szBuffer[cchBuffer];
   CHECK(!GetSuggestionsFromWord(hDictionary, L"word", 0, szBuffer, cchBuffer));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NullBuffer_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NullBuffer_NotSuccessful)
+{
   CHECK(!GetSuggestionsFromWord(hDictionary, L"word", 4, NULL, 4096));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_0LengthBuffer_NotSuccessful){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_0LengthBuffer_NotSuccessful)
+{
   wchar_t szBuffer[4096];
   CHECK(!GetSuggestionsFromWord(hDictionary, L"word", 4, szBuffer, 0));
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_SuggestionsCannotFitInBuffer_SuccessfulButTrimmed){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_SuggestionsCannotFitInBuffer_SuccessfulButTrimmed)
+{
   std::vector<const std::wstring> sWords;
   sWords.push_back(std::wstring(L"cat"));
   sWords.push_back(std::wstring(L"hat"));
@@ -259,7 +283,8 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_SuggestionsCannotFitI
   }
 }
 
-TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NoSuggestionsWithinEditDistance_NoSuggestions){
+TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NoSuggestionsWithinEditDistance_NoSuggestions)
+{
   std::vector<const std::wstring> sWords;
   sWords.push_back(std::wstring(L"cat"));
   sWords.push_back(std::wstring(L"hat"));
@@ -280,10 +305,12 @@ TEST_FIXTURE(DictionaryTestFixture, GetSuggestionsFromWord_NoSuggestionsWithinEd
     i+= sSuggestion.size();
   }
   
-  CHECK_EQUAL(0, sSuggestions.size());
+  CHECK_EQUAL(static_cast<std::vector<std::wstring>::size_type>(0), 
+              sSuggestions.size());
 }
 
-TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryChangedExternally_Successful){
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryChangedExternally_Successful)
+{
   std::vector<const std::wstring> sWords;
   sWords.push_back(std::wstring(L"cat"));
   sWords.push_back(std::wstring(L"hat"));
@@ -311,7 +338,8 @@ TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryChangedExternal
 
 }
 
-TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryBeginsWithBOM_Successful){
+TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryBeginsWithBOM_Successful)
+{
   ExternalCreateDictionaryWithBOM();
 
   std::vector<const std::wstring> sWords;
@@ -328,6 +356,3 @@ TEST_FIXTURE(DictionaryTestFixture, IsWordInDictionary_DictionaryBeginsWithBOM_S
     CHECK(result);
   }
 }
-
-
-  
