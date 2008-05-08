@@ -45,7 +45,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32;LIBXML_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,7 +135,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
-				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32"
+				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32;LIBXML_STATIC"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -210,10 +210,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LiftDictionaryFile.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\LineDictionaryFile.cpp"
 				>
 			</File>
@@ -243,19 +239,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LiftDictionaryFile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\LineDictionaryFile.h"
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\SpellDictionary.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SpellDictionary.h"
+				RelativePath=".\XmlDictionaryFile.h"
 				>
 			</File>
 		</Filter>
