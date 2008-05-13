@@ -17,6 +17,7 @@
 #include <string>
 #include <glib.h>
 #include "Convert.h"
+#include "Normalize.h"
 
 class DictionaryFileBase : public IDictionaryFile
 {
@@ -100,7 +101,7 @@ public:
 
         while(FileHasAnotherWord())
         {
-            dictionary.insert(GetNextWordFromFile());
+            dictionary.insert(Normalize::ToNFD(GetNextWordFromFile()));
         }
 
         if(!GetWordsFromFileTeardown())

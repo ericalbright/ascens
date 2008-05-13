@@ -1,6 +1,7 @@
 #include "SpellDictionary.h"
 #include "IDictionaryFile.h"
 #include "Convert.h"
+#include "Normalize.h"
 
 SpellDictionary::SpellDictionary(void)
 : nErrorTolerance_(2), nBestErrorTolerance_(6)
@@ -32,9 +33,10 @@ SpellDictionary::Load (IDictionaryFile*const pDictionaryFile)
 }
 
 bool 
-SpellDictionary::IsWordPresent(const std::basic_string<gunichar>& strWord) 
+SpellDictionary::IsWordPresent(const std::basic_string<gunichar>& word) 
 {
   Load();
+  std::basic_string<gunichar> strWord = Normalize::ToNFD(word);
   return rgWordList_.find(strWord) != rgWordList_.end(); 
 }
 
@@ -50,13 +52,13 @@ SpellDictionary::IsWordPresentUtf16(const std::basic_string<gunichar2>& strWord)
     return IsWordPresent(Convert::ToUcs4(strWord));
 }
 
-std::vector<std::basic_string<gunichar>> 
-SpellDictionary::GetSuggestionsFromWord(const std::basic_string<gunichar>& strWord) 
+std::vector<const std::basic_string<gunichar>> 
+SpellDictionary::GetSuggestionsFromWord(const std::basic_string<gunichar>& word) 
 {
-  std::vector<std::basic_string<gunichar>>        rgstrWords;
+  std::vector<const std::basic_string<gunichar>>        rgstrWords;
   std::vector<wordlist_type::iterator>            rgIt;
   std::vector<wordlist_type::iterator>::iterator  itrgIt;
-  
+  std::basic_string<gunichar> strWord = Normalize::ToNFD(word);
   Load();
   
   // break word and check if two newly created words are both words.
@@ -83,15 +85,15 @@ SpellDictionary::GetSuggestionsFromWord(const std::basic_string<gunichar>& strWo
 
   return rgstrWords;
 }
-std::vector<std::string> 
+std::vector<const std::string> 
 SpellDictionary::GetSuggestionsFromWordUtf8(const std::string& strWord) 
 {
-    std::vector<std::basic_string<gunichar>> suggestions;
+    std::vector<const std::basic_string<gunichar>> suggestions;
     suggestions = GetSuggestionsFromWord(Convert::ToUcs4(strWord));
 
-    std::vector<std::string>        result;
+    std::vector<const std::string>        result;
 
-    for(std::vector<std::basic_string<gunichar>>::iterator it = suggestions.begin();
+    for(std::vector<const std::basic_string<gunichar>>::iterator it = suggestions.begin();
         it != suggestions.end(); 
         ++it) 
     {
@@ -101,15 +103,15 @@ SpellDictionary::GetSuggestionsFromWordUtf8(const std::string& strWord)
     return result;
 }
 
-std::vector<std::basic_string<gunichar2>> 
+std::vector<const std::basic_string<gunichar2>> 
 SpellDictionary::GetSuggestionsFromWordUtf16(const std::basic_string<gunichar2>& strWord) 
 {
-    std::vector<std::basic_string<gunichar>> suggestions;
+    std::vector<const std::basic_string<gunichar>> suggestions;
     suggestions = GetSuggestionsFromWord(Convert::ToUcs4(strWord));
 
-    std::vector<std::basic_string<gunichar2>> result;
+    std::vector<const std::basic_string<gunichar2>> result;
 
-    for(std::vector<std::basic_string<gunichar>>::iterator it = suggestions.begin();
+    for(std::vector<const std::basic_string<gunichar>>::iterator it = suggestions.begin();
         it != suggestions.end(); 
         ++it) 
     {
@@ -145,10 +147,11 @@ SpellDictionary::AddWordUtf16(const std::basic_string<gunichar2>& strWord)
 }
 
 void 
-SpellDictionary::RemoveWord(const std::basic_string<gunichar>& strWord) 
+SpellDictionary::RemoveWord(const std::basic_string<gunichar>& word) 
 {
   Load();
-  
+  std::basic_string<gunichar> strWord = Normalize::ToNFD(word);
+
   // only bother saving if a removal actually occured.
   if (rgWordList_.erase(strWord) != 0){
     Save();

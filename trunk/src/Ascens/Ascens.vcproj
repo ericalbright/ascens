@@ -44,8 +44,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32;LIBXML_STATIC"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;;&quot;$(SolutionDir)..\lib\enchant\src&quot;"
+				PreprocessorDefinitions="NDEBUG;_WINDOWS;WIN32;LIBXML_STATIC;_ENCHANT_BUILD=1"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -57,6 +57,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="0"
+				ForcedIncludeFiles="$(SolutionDir)..\lib\enchant\src\config.h.win32"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -71,10 +72,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib libenchant.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;;&quot;$(SolutionDir)..\lib\enchant\bin\$(ConfigurationName)&quot;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="1"
 				TargetMachine="1"
@@ -102,6 +103,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)\*.dll&quot; &quot;$(OutDir)\&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -134,8 +136,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;"
-				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32;LIBXML_STATIC"
+				AdditionalIncludeDirectories=".\;&quot;$(SolutionDir)..\lib\glib\include\glib-2.0&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\include&quot;;&quot;$(SolutionDir)..\lib\enchant\src&quot;"
+				PreprocessorDefinitions="_WINDOWS;_DEBUG;WIN32;LIBXML_STATIC;_ENCHANT_BUILD=1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -148,6 +150,7 @@
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 				CompileAs="0"
+				ForcedIncludeFiles="$(SolutionDir)..\lib\enchant\src\config.h.win32"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -162,10 +165,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib"
+				AdditionalDependencies="glib-2.0-vs8.lib libxml2_a.lib libenchant.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\libxml2-2.6.32\win32\bin.msvc&quot;;&quot;$(SolutionDir)..\lib\enchant\bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/scent.pdb"
 				SubSystem="1"
@@ -194,7 +197,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)\*.dll&quot; &quot;$(OutDir)\&quot;"
+				CommandLine="copy &quot;$(SolutionDir)..\lib\glib\$(ConfigurationName)\*.dll&quot; &quot;$(OutDir)\&quot;&#x0D;&#x0A;&#x0D;&#x0A;if exist &quot;$(SolutionDir)..\lib\enchant\bin\$(ConfigurationName)\unittest-providers.exe&quot;  &quot;$(SolutionDir)..\lib\enchant\bin\$(ConfigurationName)\unittest-providers.exe&quot; &quot;$(TargetPath)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -207,6 +210,10 @@
 			>
 			<File
 				RelativePath=".\Ascens.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EnchantProvider.cpp"
 				>
 			</File>
 			<File
@@ -240,6 +247,10 @@
 			</File>
 			<File
 				RelativePath=".\LineDictionaryFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Normalize.h"
 				>
 			</File>
 			<File
