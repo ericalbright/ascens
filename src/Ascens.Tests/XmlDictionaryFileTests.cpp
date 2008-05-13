@@ -2,6 +2,7 @@
 #include "XmlDictionaryFile.h"
 #include <fstream>
 #include <io.h>
+#include <algorithm>
 #include "Convert.h"
 
 struct XmlDictionaryTestFixture{
