@@ -104,11 +104,11 @@ DllExport BOOL ASCENSAPI GetSuggestionsFromWord(DHANDLE hDictionary, LPCWSTR str
   pDictionary->SetSuggestionErrorTolerance(nErrorTolerance);
   pDictionary->SetSuggestionBestErrorTolerance(nBestErrorTolerance);
   try{
-      std::vector<std::basic_string<gunichar2> > rgstrSuggestions = 
+      std::vector<const std::basic_string<gunichar2> > rgstrSuggestions = 
         pDictionary->GetSuggestionsFromWordUtf16(sWord);
 
     size_t pos = 0;
-    for(std::vector<std::basic_string<gunichar2> >::iterator 
+    for(std::vector<const std::basic_string<gunichar2> >::iterator 
                             itrgstrSuggestions=rgstrSuggestions.begin(); 
         itrgstrSuggestions!=rgstrSuggestions.end(); 
         ++itrgstrSuggestions) { 

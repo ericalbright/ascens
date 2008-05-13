@@ -28,8 +28,11 @@ public:
 
         gunichar* ucs4 = g_utf8_to_ucs4(s.c_str(), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::basic_string<gunichar>(ucs4);
-        g_free(ucs4);
+        if(ucs4 != NULL)
+        {
+            result = std::basic_string<gunichar>(ucs4);
+            g_free(ucs4);
+        }
         return result;
     }
 
@@ -41,8 +44,11 @@ public:
 
         gunichar* ucs4 = g_utf16_to_ucs4(s.c_str(), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::basic_string<gunichar>(ucs4);
-        g_free(ucs4);
+        if(ucs4 != NULL)
+        {
+            result = std::basic_string<gunichar>(ucs4);
+            g_free(ucs4);
+        }
         return result;
     }
 
@@ -55,8 +61,11 @@ public:
         gunichar* ucs4 = g_utf16_to_ucs4(
             reinterpret_cast<const gunichar2*>(s.c_str()), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::basic_string<gunichar>(ucs4);
-        g_free(ucs4);
+        if(ucs4 != NULL)
+        {
+            result = std::basic_string<gunichar>(ucs4);
+            g_free(ucs4);
+        }
         return result;
     }
 
@@ -68,8 +77,11 @@ public:
 
         gchar* utf8 = g_ucs4_to_utf8(s.c_str(), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::string(utf8);
-        g_free(utf8);
+        if(utf8 != NULL)
+        {
+            result = std::string(utf8);
+            g_free(utf8);
+        }
         return result;
     }
 
@@ -81,8 +93,11 @@ public:
 
         gchar* utf8 = g_utf16_to_utf8(s.c_str(), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::string(utf8);
-        g_free(utf8);
+        if(utf8 != NULL)
+        {
+            result = std::string(utf8);
+            g_free(utf8);
+        }
         return result;
     }
 
@@ -94,8 +109,11 @@ public:
 
         gunichar2* utf16 = g_ucs4_to_utf16(s.c_str(), 
             static_cast<glong>(s.length()), NULL, NULL, NULL);
-        result = std::basic_string<gunichar2>(utf16);
-        g_free(utf16);
+        if(utf16 != NULL)
+        {
+            result = std::basic_string<gunichar2>(utf16);
+            g_free(utf16);
+        }
         return result;
     }
 };

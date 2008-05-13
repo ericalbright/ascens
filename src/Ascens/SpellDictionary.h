@@ -51,9 +51,9 @@ bool IsWordPresentUtf8(const std::string& strWord);
 bool IsWordPresentUtf16(const std::basic_string<gunichar2>& strWord);
   
 //     GetSuggestionsFromWord   -- gives a list of words which a similar by N distinctions --
-std::vector<std::basic_string<gunichar> > GetSuggestionsFromWord(const std::basic_string<gunichar>& strWord);
-std::vector<std::string> GetSuggestionsFromWordUtf8(const std::string& strWord);
-std::vector<std::basic_string<gunichar2> > GetSuggestionsFromWordUtf16(const std::basic_string<gunichar2>& strWord);
+std::vector<const std::basic_string<gunichar> > GetSuggestionsFromWord(const std::basic_string<gunichar>& strWord);
+std::vector<const std::string> GetSuggestionsFromWordUtf8(const std::string& strWord);
+std::vector<const std::basic_string<gunichar2> > GetSuggestionsFromWordUtf16(const std::basic_string<gunichar2>& strWord);
 
 //     AddWord                  -- adds the word to the dictionary if it does not exist --
   void AddWord(const std::basic_string<gunichar>& strWord);
