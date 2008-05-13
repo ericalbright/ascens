@@ -48,6 +48,16 @@ ascens_get_key_file_dirs (void)
         dirs.push_back(ascens_data_dir);
         g_free(ascens_data_dir);
     }
+
+  	char * enchant_prefix = enchant_get_prefix_dir();
+	if(enchant_prefix != NULL)
+	{
+		gchar* ascens_share_dir = g_build_filename(enchant_prefix, "share", "enchant", "ascens", NULL);
+		g_free(enchant_prefix);
+        dirs.push_back(ascens_share_dir);
+        g_free(ascens_share_dir);
+	}
+
 	return dirs;
 }
 
@@ -191,7 +201,10 @@ ascens_provider_dictionary_exists (EnchantProvider *,
     GKeyFile* settings_file = ascens_get_settings_file(language_id, &full_path);
     exists = ascens_settings_file_is_valid(settings_file, full_path);
     g_free(full_path);
-    g_key_file_free(settings_file);
+    if(settings_file != NULL)
+    {
+        g_key_file_free(settings_file);
+    }
     return exists;
 }
 
@@ -215,7 +228,10 @@ ascens_provider_request_dict (EnchantProvider *, const char *const language_id)
         xpath = ascens_get_setting_value(settings_file, DICTIONARY_SETTING_XPATH);
     }
 
-    g_key_file_free(settings_file);
+    if(settings_file != NULL)
+    {
+        g_key_file_free(settings_file);
+    }
 
     if(dict_path.empty() || dict_type.empty())
     {
@@ -270,6 +286,10 @@ ascens_provider_list_dicts (EnchantProvider *,
         ++it)
     {
         GDir* dir = g_dir_open(it->c_str(), 0, NULL);
+        if(dir == NULL)
+        {
+            continue;
+        }
         while(true){
             const gchar* file = g_dir_read_name(dir);
             if(file == NULL)
