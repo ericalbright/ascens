@@ -1,0 +1,1 @@
+Provides a word list container for basic spell checking facilities
